@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pipeline Failure Predictor — Stable Version</title>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- TensorFlow.js then Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <h1>Predictive Water Pipeline Failure</h1>
+        <p class="subtitle">Stable build — auto-checks + robust parsing</p>
+      </div>
+      <div class="header-right">
+        <button id="openDocsBtn" class="btn small">Docs</button>
+        <button id="showSampleBtn" class="btn small">Show Sample</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="left-column">
+        <div class="card">
+          <h2>Load Dataset</h2>
+          <input type="file" id="fileInput" accept=".csv" />
+          <div class="row">
+            <button class="btn" id="loadExampleBtn">Example CSV</button>
+            <button class="btn" id="parseBtn" disabled>Parse CSV</button>
+          </div>
+          <div id="dataSummary" class="info">No CSV parsed yet. Click Example CSV or upload your CSV.</div>
+          <div id="featureStats" class="info" style="margin-top:10px;"></div>
+          <div id="sampleTable" style="margin-top:10px;overflow:auto;"></div>
+        </div>
+
+        <div class="card">
+          <h2>Train Model</h2>
+          <div class="grid-small">
+            <label>Epochs <input id="epochs" type="number" value="30"></label>
+            <label>Batch <input id="batchSize" type="number" value="32"></label>
+            <label>LR <input id="lr" type="number" step="0.001" value="0.01"></label>
+          </div>
+
+          <div class="row">
+            <button class="btn" id="trainBtn" disabled>Train</button>
+            <button class="btn" id="saveModelBtn" disabled>Save</button>
+            <button class="btn" id="loadModelBtn">Load</button>
+          </div>
+
+          <div id="trainLogs" class="info"></div>
+        </div>
+
+        <div class="card">
+          <h2>Predict Failure</h2>
+          <div id="predictInputs" class="predict-inputs"></div>
+          <div class="row">
+            <button class="btn" id="predictBtn" disabled>Predict</button>
+            <button class="btn" id="resetModelBtn">Reset</button>
+          </div>
+          <div id="predictResult" class="result"></div>
+        </div>
+      </section>
+
+      <section class="right-column">
+        <div class="card chart-card">
+          <h3>Training: Loss & Accuracy</h3>
+          <div class="chart-wrap"><canvas id="lossChart"></canvas></div>
+        </div>
+
+        <div class="card chart-card">
+          <h3>Feature Preview</h3>
+          <div class="chart-wrap"><canvas id="featureChart"></canvas></div>
+        </div>
+
+        <div class="card console-card">
+          <h3>Console Output</h3>
+          <pre id="consoleOut" class="console"></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <small>Open in Chrome/Edge for TF.js best performance.</small>
+    </footer>
+  </div>
+
+  <!-- Simple docs overlay -->
+  <div id="docsOverlay" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="overlay-content">
+      <div class="overlay-header">
+        <h2>Dataset & Training Guide</h2>
+        <button id="closeDocsBtn" class="btn small">Close</button>
+      </div>
+      <div class="overlay-body">
+        <h3>Header</h3>
+        <pre>age,pressure,flow,leak_history,corrosion_index,failure</pre>
+        <h3>Model</h3>
+        <p>Dense(32)->Dense(16)->Dense(1 sigmoid). Loss binaryCrossentropy. Optimizer Adam.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="model.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
